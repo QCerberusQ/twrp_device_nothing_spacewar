@@ -16,6 +16,7 @@
 
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 TW_DEVICE_VERSION := QCerberusQ
 
 # Architecture
