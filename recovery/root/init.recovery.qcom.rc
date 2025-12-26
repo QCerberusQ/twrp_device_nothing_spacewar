@@ -1,6 +1,7 @@
 import /init.recovery.qcom_decrypt.rc
 
 on early-init
+    insmod /vendor/lib/modules/fts_tp.ko
     exec u:r:set_permissive:s0 -- /system/bin/set_permissive.sh
     # create symlink for vendor mount points
     symlink /vendor/firmware_mnt /firmware
@@ -55,7 +56,6 @@ on property:modem.partition.mounted=1
     insmod /vendor/lib/modules/snd_event_dlkm.ko
     insmod /vendor/lib/modules/apr_dlkm.ko
     insmod /vendor/lib/modules/adsp_loader_dlkm.ko
-    insmod /vendor/lib/modules/fts_tp.ko
 
 on property:dev.mnt.blk.firmware=*
     wait /sys/kernel/boot_adsp/boot
