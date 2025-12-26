@@ -39,9 +39,10 @@ AB_OTA_POSTINSTALL_CONFIG += \
 PRODUCT_PACKAGES += \
     otapreopt_script
 
-#Touch
+# Input Configuration
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/recovery/root/system/usr/idc/fts_ts.idc:system/usr/idc/fts_ts.idc
+    $(LOCAL_PATH)/recovery/root/system/usr/idc/fts_ts.idc:recovery/root/system/usr/idc/fts_ts.idc \
+    $(LOCAL_PATH)/recovery/root/vendor/usr/idc/fts_ts.idc:recovery/root/vendor/usr/idc/fts_ts.idc
 
 # Boot control HAL
 PRODUCT_PACKAGES += \
