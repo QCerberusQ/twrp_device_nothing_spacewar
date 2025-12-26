@@ -5,7 +5,7 @@ on early-init
     exec u:r:set_permissive:s0 -- /system/bin/set_permissive.sh
 
     # 1. Dokunmatik sürücüsünü yükle (Driver Loading)
-    insmod /vendor/lib/modules/fts_tp.ko
+    insmod /lib/modules/fts_tp.ko
 
     # 2. Input sistemini uyar (Tetikleyici)
     # Bu satır sistemin yeni donanımı fark etmesi için sinyal gönderir
