@@ -41,6 +41,7 @@ PRODUCT_PACKAGES += \
 
 # Input Configuration (Düzeltilmiş)
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/recovery/root/lib/modules/fts_tp.ko:$(TARGET_COPY_OUT_RECOVERY)/root/lib/modules/fts_tp.ko \
     $(LOCAL_PATH)/recovery/root/system/usr/idc/fts_ts.idc:$(TARGET_COPY_OUT_RECOVERY)/root/system/usr/idc/fts_ts.idc \
     $(LOCAL_PATH)/recovery/root/vendor/usr/idc/fts_ts.idc:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/usr/idc/fts_ts.idc
 
