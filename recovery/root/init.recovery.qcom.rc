@@ -1,11 +1,10 @@
 import /init.recovery.qcom_decrypt.rc
 
 on early-init
-    # SELinux'u permissive moda al (En başta olması şart)
+    # SELinux permissive (tek ve en başta)
     exec u:r:set_permissive:s0 -- /system/bin/set_permissive.sh
 
-    # Qualcomm dependencies
-    insmod /lib/modules/msm_drm.ko
+    # Qualcomm core dependencies (EARLY)
     insmod /lib/modules/q6_pdr_dlkm.ko
     insmod /lib/modules/q6_notifier_dlkm.ko
     insmod /lib/modules/snd_event_dlkm.ko
@@ -14,18 +13,20 @@ on early-init
 
     # Touchscreen (FocalTech)
     insmod /lib/modules/fts_tp.ko
-    
-    # 2. Input sistemini uyar (Tetikleyici)
-    # Bu satır sistemin yeni donanımı fark etmesi için sinyal gönderir
-    trigger early-input
 
-    # create symlink for vendor mount points
+    # vendor symlinks
     symlink /vendor/firmware_mnt /firmware
     symlink /vendor/bt_firmware /bt_firmware
     symlink /vendor/dsp /dsp
     write /proc/sys/kernel/firmware_config/force_sysfs_fallback 1
 
 on init
+    # Display / DRM burada veya hiç yüklenmeyebilir
+    insmod /lib/modules/msm_drm.ko
+
+    # Input trigger ARTIK DOĞRU YERDE
+    trigger early-input
+
     mount_all /vendor/etc/charger_fw_fstab.qti --early
     write /sys/class/backlight/panel0-backlight/brightness 200
     setprop sys.usb.configfs 1
@@ -39,7 +40,6 @@ on fs
 
 on late-fs
     start keymasterd
-    # start set_permissive BURADAN SİLİNDİ (Gereksiz tekrar)
 
 on post-fs
     start boot-hal-1-1
@@ -66,14 +66,6 @@ on boot
     start vendor.qti.vibrator
     setprop sys.usb.config adb
 
-on property:modem.partition.mounted=1
-    insmod /vendor/lib/modules/q6_pdr_dlkm.ko
-    insmod /vendor/lib/modules/q6_notifier_dlkm.ko
-    insmod /vendor/lib/modules/snd_event_dlkm.ko
-    insmod /vendor/lib/modules/apr_dlkm.ko
-    insmod /vendor/lib/modules/adsp_loader_dlkm.ko
-    # fts_tp.ko BURADAN SİLİNDİ (early-init'e taşındı)
-
 on property:dev.mnt.blk.firmware=*
     wait /sys/kernel/boot_adsp/boot
     write /sys/kernel/boot_adsp/boot 1
@@ -84,22 +76,3 @@ on property:ro.boot.usbcontroller=*
     setprop sys.usb.controller ${ro.boot.usbcontroller}
     wait /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode
     write /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode peripheral
-
-service set_permissive /system/bin/set_permissive.sh
-    user root
-    group root
-    disabled
-    oneshot
-    seclabel u:r:recovery:s0
-
-service keymasterd /system/bin/keymasterd
-     user root
-     group root
-     disabled
-     seclabel u:r:recovery:s0
-
-service health-hal-2-1 /system/bin/android.hardware.health@2.1-service
-    user root
-    group root
-    disabled
-    seclabel u:r:recovery:s0
