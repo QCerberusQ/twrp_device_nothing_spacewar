@@ -1,4 +1,4 @@
-import /init.recovery.qcom_decrypt.rc
+
 
 on early-init
     # SELinux permissive (tek ve en başta)
