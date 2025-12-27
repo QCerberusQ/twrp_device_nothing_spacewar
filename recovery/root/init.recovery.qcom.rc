@@ -1,7 +1,6 @@
 on early-init
-    # SELinux permissive (tek ve yeterli)
+    # SELinux permissive (En başta ve tek sefer)
     exec u:r:set_permissive:s0 -- /system/bin/set_permissive.sh
-
 
 on fs
     wait /dev/block/platform/soc/${ro.boot.bootdevice}
@@ -16,24 +15,22 @@ on fs
     symlink /vendor/dsp /dsp
     write /proc/sys/kernel/firmware_config/force_sysfs_fallback 1
 
-
 on post-fs
-    # Qualcomm vendor modülleri (vendor mount SONRASI)
+    # --- KRİTİK BÖLÜM: Modülleri Şimdi Yüklüyoruz (Vendor Hazır) ---
+    # Önce bağımlılıklar (Vendor'dan)
     insmod /vendor/lib/modules/q6_pdr_dlkm.ko
     insmod /vendor/lib/modules/q6_notifier_dlkm.ko
     insmod /vendor/lib/modules/apr_dlkm.ko
     insmod /vendor/lib/modules/adsp_loader_dlkm.ko
     insmod /vendor/lib/modules/msm_drm.ko
 
-    # Touchscreen (EN SON)
+    # En son Dokunmatik (Bizim kopyaladığımız yerden)
     insmod /lib/modules/fts_tp.ko
 
     start boot-hal-1-1
 
-
 on boot
     setprop sys.usb.config adb
-
 
 service vendor.qti.vibrator /system/bin/vendor.qti.hardware.vibrator.service
     user root
@@ -41,13 +38,11 @@ service vendor.qti.vibrator /system/bin/vendor.qti.hardware.vibrator.service
     disabled
     seclabel u:r:recovery:s0
 
-
 service keymasterd /system/bin/keymasterd
     user root
     group root
     disabled
     seclabel u:r:recovery:s0
-
 
 service health-hal-2-1 /system/bin/android.hardware.health@2.1-service
     user root
