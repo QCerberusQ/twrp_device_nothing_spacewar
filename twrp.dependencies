@@ -1,6 +1,6 @@
 {
   "kernel/nothing/Spacewar": {
     "remote": "https://github.com/LineageOS/android_kernel_nothing_sm7325",
-    "branch": "lineage-22"
+    "branch": "lineage-23.0"
   }
 }
