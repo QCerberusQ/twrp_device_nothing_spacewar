@@ -1,9 +1,3 @@
-#
-# Copyright (C) 2021 The TWRP Open Source Project
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-#
-
 # -------------------------------------------------
 # BASIC
 # -------------------------------------------------
@@ -51,20 +45,17 @@ AB_OTA_PARTITIONS += \
     vendor_boot
 
 # -------------------------------------------------
-# KERNEL (PREBUILT – NO SOURCE, NO HEADERS)
+# KERNEL (PREBUILT IMAGE + SOURCE FOR HEADERS)
 # -------------------------------------------------
 TARGET_PREBUILT_KERNEL := device/nothing/Spacewar/prebuilt/kernel
 BOARD_PREBUILT_DTBOIMAGE := device/nothing/Spacewar/prebuilt/dtbo.img
-
-TARGET_NO_KERNEL := true
-TARGET_NO_KERNEL_HEADERS := true
 
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_BOOT_HEADER_VERSION := 4
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 
-# Kernel cmdline (stoktan alınan, güvenli)
+# Kernel cmdline (stock)
 BOARD_KERNEL_CMDLINE += androidboot.console=ttyMSM0
 BOARD_KERNEL_CMDLINE += androidboot.hardware=qcom
 BOARD_KERNEL_CMDLINE += androidboot.memcg=1
@@ -89,7 +80,7 @@ BOARD_RAMDISK_USE_LZ4 := true
 BOARD_USES_METADATA_PARTITION := true
 
 # -------------------------------------------------
-# ANDROID VERSION SPOOF (DECRYPT FIX)
+# ANDROID VERSION SPOOF
 # -------------------------------------------------
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
@@ -126,12 +117,6 @@ TARGET_USERIMAGES_USE_F2FS := true
 # VERIFIED BOOT
 # -------------------------------------------------
 BOARD_AVB_ENABLE := true
-BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
-BOARD_AVB_VBMETA_SYSTEM := system system_ext product
-BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
-BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA2048
-BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
-BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 1
 
 # -------------------------------------------------
 # CRYPTO
@@ -139,49 +124,18 @@ BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 1
 TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_CRYPTO_FBE := true
 BOARD_USES_QCOM_FBE_DECRYPTION := true
-BOARD_USES_METADATA_PARTITION := true
 TW_USE_FSCRYPT_POLICY := 1
 TW_PREPARE_DATA_MEDIA_EARLY := true
-PRODUCT_ENFORCE_VINTF_MANIFEST := true
 
 # -------------------------------------------------
 # TWRP UI / INPUT
 # -------------------------------------------------
 TW_THEME := portrait_hdpi
 RECOVERY_SDCARD_ON_DATA := true
-TARGET_RECOVERY_QCOM_RTC_FIX := true
-TW_EXCLUDE_DEFAULT_USB_INIT := true
-TW_EXTRA_LANGUAGES := true
-TW_INCLUDE_NTFS_3G := true
-TW_USE_TOOLBOX := true
-
 TW_USE_EVDEV_INPUT := true
-TW_INPUT_BLACKLIST := "hbtp_vm qcom-hv-haptics"
-
-TW_BRIGHTNESS_PATH := "/sys/class/backlight/panel0-backlight/brightness"
-TW_MAX_BRIGHTNESS := 2047
-TW_DEFAULT_BRIGHTNESS := 1200
-
-TWRP_INCLUDE_LOGCAT := true
-TW_INCLUDE_PYTHON := true
-TARGET_USES_LOGD := true
-TARGET_USES_MKE2FS := true
-TW_EXCLUDE_TWRPAPP := true
-
-TW_OVERRIDE_SYSTEM_PROPS := "ro.build.date.utc;ro.build.product;ro.build.fingerprint=ro.system.build.fingerprint;ro.build.version.incremental;ro.product.device=ro.product.system.device;ro.product.model=ro.product.system.model;ro.product.name=ro.product.system.name"
-
-TW_Y_OFFSET := 20
-TW_H_OFFSET := -20
-TW_CUSTOM_BATTERY_PATH := "/sys/class/power_supply/battery"
 
 # -------------------------------------------------
-# MISC
-# -------------------------------------------------
-TW_SUPPORT_INPUT_AIDL_HAPTICS := true
-TW_SKIP_ADDITIONAL_FSTAB := true
-
-# -------------------------------------------------
-# VENDOR BOOT (RECOVERY IN VENDOR_BOOT)
+# VENDOR BOOT
 # -------------------------------------------------
 BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
 BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
