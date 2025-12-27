@@ -4,9 +4,17 @@ on early-init
     # SELinux'u permissive moda al (En başta olması şart)
     exec u:r:set_permissive:s0 -- /system/bin/set_permissive.sh
 
-    # 1. Dokunmatik sürücüsünü yükle (Driver Loading)
-    insmod /lib/modules/fts_tp.ko
+    # Qualcomm dependencies
+    insmod /lib/modules/msm_drm.ko
+    insmod /lib/modules/q6_pdr_dlkm.ko
+    insmod /lib/modules/q6_notifier_dlkm.ko
+    insmod /lib/modules/snd_event_dlkm.ko
+    insmod /lib/modules/apr_dlkm.ko
+    insmod /lib/modules/adsp_loader_dlkm.ko
 
+    # Touchscreen (FocalTech)
+    insmod /lib/modules/fts_tp.ko
+    
     # 2. Input sistemini uyar (Tetikleyici)
     # Bu satır sistemin yeni donanımı fark etmesi için sinyal gönderir
     trigger early-input
