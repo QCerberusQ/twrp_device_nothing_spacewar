@@ -1,94 +1,44 @@
 on early-init
-    # SELinux permissive (tek kez, en başta)
+    # SELinux permissive (tek ve yeterli)
     exec u:r:set_permissive:s0 -- /system/bin/set_permissive.sh
-
-    # Qualcomm display / audio / dsp bağımlılıkları
-    insmod /lib/modules/msm_drm.ko
-    insmod /lib/modules/q6_pdr_dlkm.ko
-    insmod /lib/modules/q6_notifier_dlkm.ko
-    insmod /lib/modules/snd_event_dlkm.ko
-    insmod /lib/modules/apr_dlkm.ko
-    insmod /lib/modules/adsp_loader_dlkm.ko
-
-    # Touchscreen (FocalTech)
-    insmod /lib/modules/fts_tp.ko
-
-    # Input sistemini tetikle
-    trigger early-input
-
-    # Vendor firmware symlinkleri
-    symlink /vendor/firmware_mnt /firmware
-    symlink /vendor/bt_firmware /bt_firmware
-    symlink /vendor/dsp /dsp
-    write /proc/sys/kernel/firmware_config/force_sysfs_fallback 1
-
-
-on init
-    mount_all /vendor/etc/charger_fw_fstab.qti --early
-    write /sys/class/backlight/panel0-backlight/brightness 200
-    setprop sys.usb.configfs 1
-    write /sys/class/power_supply/usb/otg_switch 1
 
 
 on fs
     wait /dev/block/platform/soc/${ro.boot.bootdevice}
     symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
+
     mkdir /firmware
     mount vfat /dev/block/bootdevice/by-name/modem${ro.boot.slot_suffix} /firmware ro context=u:object_r:firmware_file:s0
 
-
-on late-fs
-    start keymasterd
+    # Vendor firmware symlinkleri
+    symlink /vendor/firmware_mnt /firmware_mnt
+    symlink /vendor/bt_firmware /bt_firmware
+    symlink /vendor/dsp /dsp
+    write /proc/sys/kernel/firmware_config/force_sysfs_fallback 1
 
 
 on post-fs
+    # Qualcomm vendor modülleri (vendor mount SONRASI)
+    insmod /vendor/lib/modules/q6_pdr_dlkm.ko
+    insmod /vendor/lib/modules/q6_notifier_dlkm.ko
+    insmod /vendor/lib/modules/apr_dlkm.ko
+    insmod /vendor/lib/modules/adsp_loader_dlkm.ko
+    insmod /vendor/lib/modules/msm_drm.ko
+
+    # Touchscreen (EN SON)
+    insmod /lib/modules/fts_tp.ko
+
     start boot-hal-1-1
 
 
-on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
-    chmod 0777 /system/bin/wrappedkey-fix.sh
-    start wrapped-key
+on boot
+    setprop sys.usb.config adb
 
 
 service vendor.qti.vibrator /system/bin/vendor.qti.hardware.vibrator.service
     user root
     group root
     disabled
-    setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib:/system/lib64:/system/lib:/sbin
-    seclabel u:r:recovery:s0
-
-
-service wrapped-key /system/bin/wrappedkey-fix.sh
-    user root
-    group root
-    disabled
-    oneshot
-    seclabel u:r:recovery:s0
-
-
-on boot
-    start vendor.qti.vibrator
-    setprop sys.usb.config adb
-
-
-on property:dev.mnt.blk.firmware=*
-    wait /sys/kernel/boot_adsp/boot
-    write /sys/kernel/boot_adsp/boot 1
-    wait /sys/class/power_supply/battery
-    start health-hal-2-1
-
-
-on property:ro.boot.usbcontroller=*
-    setprop sys.usb.controller ${ro.boot.usbcontroller}
-    wait /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode
-    write /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode peripheral
-
-
-service set_permissive /system/bin/set_permissive.sh
-    user root
-    group root
-    disabled
-    oneshot
     seclabel u:r:recovery:s0
 
 
