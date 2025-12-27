@@ -11,12 +11,13 @@ PRODUCT_PACKAGES += \
     otapreopt_script
 
 # -------------------------------------------------
-# KERNEL MODULES (ONLY WHAT IS NEEDED)
+# KERNEL MODULES (Sadece Dokunmatik ve IDC)
 # -------------------------------------------------
+# Diğer modüller vendor'dan çekilecek, sadece fts_tp.ko'yu kopyalıyoruz
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/root/lib/modules/fts_tp.ko:$(TARGET_COPY_OUT_RECOVERY)/root/lib/modules/fts_tp.ko
 
-# Touchscreen IDC
+# Touchscreen IDC Dosyası
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/root/system/usr/idc/fts_ts.idc:$(TARGET_COPY_OUT_RECOVERY)/root/system/usr/idc/fts_ts.idc
 
