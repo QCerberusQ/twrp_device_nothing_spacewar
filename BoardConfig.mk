@@ -48,6 +48,7 @@ AB_OTA_PARTITIONS += \
 # KERNEL (PREBUILT IMAGE + SOURCE FOR HEADERS)
 # -------------------------------------------------
 TARGET_PREBUILT_KERNEL := device/nothing/Spacewar/prebuilt/kernel
+BOARD_KERNEL_IMAGE_NAME := Image
 BOARD_PREBUILT_DTBOIMAGE := device/nothing/Spacewar/prebuilt/dtbo.img
 # DTB (vendor_boot için zorunlu)
 BOARD_PREBUILT_DTBIMAGE := device/nothing/Spacewar/prebuilt/dtb.img
