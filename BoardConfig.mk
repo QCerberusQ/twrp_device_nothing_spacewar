@@ -49,6 +49,10 @@ AB_OTA_PARTITIONS += \
 # -------------------------------------------------
 TARGET_PREBUILT_KERNEL := device/nothing/Spacewar/prebuilt/kernel
 BOARD_PREBUILT_DTBOIMAGE := device/nothing/Spacewar/prebuilt/dtbo.img
+# DTB (vendor_boot için zorunlu)
+BOARD_PREBUILT_DTBIMAGE := device/nothing/Spacewar/prebuilt/dtb.img
+BOARD_INCLUDE_DTB_IN_VENDOR_BOOTIMG := true
+
 
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 4096
